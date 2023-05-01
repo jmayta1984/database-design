@@ -138,3 +138,20 @@ from Products
 where UnitPrice = (select max(UnitPrice) max from Products)
 
 -- Indicar el nombre del país con la mayor cantidad de clientes
+
+select country, count(*) quantity
+from Customers
+group by country
+
+select max(quantity)
+from (select country, count(*) quantity
+      from Customers
+      group by country) temporal
+
+select country, count(*) quantity
+from Customers
+group by country
+having count(*) = (select max(quantity)
+                   from (select country, count(*) quantity
+                         from Customers
+                         group by country) temporal)
