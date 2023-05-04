@@ -32,13 +32,46 @@ update artistas
 set pais = 'USA'
 where pais is null
 
-
 delete from artistas
 where codigo = 4
 
 update artistas
 set pais = 'Canada', nombre = 'Madona'
-where codigo = 1 
+where codigo = 1
 
 select * from artistas
 
+insert into conciertos
+values (1, 'Festival de Rock', '05-10-2023', 'Detroit')
+
+insert into conciertos
+values (2, 'Festival de Pop', '05/15/2023', 'Chicago')
+
+insert into conciertos
+values (3, 'Festival Latin Pop', '04/13/2023', 'New York')
+
+select * from conciertos
+
+
+-- Indicar los nombres de los conciertos del mes de mayo del año 2023
+select nombre from conciertos where fecha >='2023-05-01' and fecha<= '2023-05-31'
+
+select nombre from conciertos where fecha between '2023-05-01' and '2023-05-31'
+
+select nombre from conciertos where year(fecha)=2023 and month(fecha) = 5
+
+insert into artistas_por_concierto (codigo_artista, codigo_concierto)
+values (1,1),
+		(1,2),
+		(2,1),
+		(2,3),
+		(3,1)
+
+
+select * from artistas
+select * from conciertos
+
+select * from artistas_por_concierto
+
+delete from artistas_por_concierto where codigo_artista = 3
+delete from artistas where codigo = 3
