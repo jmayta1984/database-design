@@ -12,6 +12,8 @@
 -- Modificar la tabla artistas, agregando un campo que permita almacenar
 -- el país de nacimiento del artista
 
+use audioslave
+
 alter table artistas
 add pais varchar(100)
 
