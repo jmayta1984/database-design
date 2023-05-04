@@ -1,13 +1,13 @@
 -- DDL: Definición de estructuras de objetos de base de datos
--- create
--- alter
--- drop
+-- create: crear tablas/base de datos
+-- alter: modificar tablas/base de datos
+-- drop: eliminar tablas/base de datos
 
 -- DML: Manipulación de datos
--- select
--- insert
--- update
--- delete
+-- select: recupear filas
+-- insert: insertar filas (agregar nuevos registros)
+-- update: modificar filas (modificar los valores de las columnas)
+-- delete: eliminar filas
 
 -- Modificar la tabla artistas, agregando un campo que permita almacenar
 -- el país de nacimiento del artista
@@ -27,4 +27,18 @@ values	(2, 'Britney Spears'),
 insert into artistas (codigo, nombre, pais)
 values (4, 'Bon Jovi', 'USA')
 
+
+update artistas
+set pais = 'USA'
+where pais is null
+
+
+delete from artistas
+where codigo = 4
+
+update artistas
+set pais = 'Canada', nombre = 'Madona'
+where codigo = 1 
+
 select * from artistas
+
