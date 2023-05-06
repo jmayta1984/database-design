@@ -54,4 +54,16 @@ where CompanyName like '[lm]%'
 -- Indicar la cantidad de clientes
 select count(CustomerID) from Customers
 
--- Indicar la cantidad de países distintos de procedencia de los clientes
+-- Indicar la cantidad de países de procedencia de los clientes
+select count (distinct Country) from Customers
+
+-- Indicar el mayor precio unitario de los productos
+select max(UnitPrice) from Products
+
+-- Indicar el menor precio unitario de los productos
+select min(UnitPrice)from Products
+
+-- Indicar el promedio de unidades en stock de todos los productos
+
+
+
