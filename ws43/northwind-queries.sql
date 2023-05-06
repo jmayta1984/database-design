@@ -58,8 +58,7 @@ select count(CustomerID) from Customers
 select count(*) from Customers where Country = 'Germany'
 
 -- Indicar la cantidad de clientes por país de procedencia
-select Country, count(*) from Customers group by Country
-
+select Country, count(*) as Quantity from Customers group by Country
 
 -- Indicar la cantidad de países de procedencia de los clientes
 select count (distinct Country) from Customers
@@ -77,3 +76,23 @@ select avg(UnitsInStock) from Products
 select sum(UnitsInStock) from Products
 
 -- Indicar la cantidad de productos de acuerdo a su discontinuidad
+select Discontinued, count(*) from Products group by Discontinued
+
+-- Indicar los países de procedencia que superen los cinco clientes
+-- Alternativa 1
+select Country, count(*) as Quantity from Customers group by Country having count(*)>5
+
+-- Alternativa 2
+select Country, count(*) as Quantity from Customers group by Country
+
+select Country, Quantity 
+from (select Country, count(*) as Quantity from Customers group by Country) as Temporal
+where Quantity > 5
+
+-- Indicar el nombre del producto con el mayor precio unitario
+select max(UnitPrice) from Products
+-- 263.50
+
+select ProductName from Products where UnitPrice = (select max(UnitPrice) from Products)
+
+-- Indicar el nombre del país con la mayor cantidad de clientes
