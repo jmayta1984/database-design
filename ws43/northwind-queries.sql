@@ -54,6 +54,13 @@ where CompanyName like '[lm]%'
 -- Indicar la cantidad de clientes
 select count(CustomerID) from Customers
 
+-- Indicar la cantidad de clientes cuya procedencia sea Alemania
+select count(*) from Customers where Country = 'Germany'
+
+-- Indicar la cantidad de clientes por país de procedencia
+select Country, count(*) from Customers group by Country
+
+
 -- Indicar la cantidad de países de procedencia de los clientes
 select count (distinct Country) from Customers
 
@@ -64,6 +71,9 @@ select max(UnitPrice) from Products
 select min(UnitPrice)from Products
 
 -- Indicar el promedio de unidades en stock de todos los productos
+select avg(UnitsInStock) from Products
 
+-- Indicar el cantidad total de unidades en stock de todos los productos
+select sum(UnitsInStock) from Products
 
-
+-- Indicar la cantidad de productos de acuerdo a su discontinuidad
