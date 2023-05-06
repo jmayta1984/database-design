@@ -39,3 +39,33 @@ order by UnitPrice
 select ProductName, UnitPrice from Products
 where UnitPrice > 50 or UnitPrice < 20
 order by UnitPrice
+
+use NORTHWND1
+
+-- Indicar la cantidad de clientes
+select count(*) from Customers
+
+-- Indicar la cantidad de clientes cuya procedencia sea Alemania
+select count(*) from Customers where Country = 'Germany'
+
+-- Indicar la cantidad de clientes por país de procedencia
+select Country, count(*) as Quantity from Customers group by country
+
+-- Indicar los nombres de los países que tengan más de 5 clientes
+select Country, count(*) as Quantity from Customers
+group by country
+having count(*) > 5
+
+-- Indicar el nombre del país con la mayor cantidad de clientes
+select Country, count(*) as Quantity from Customers group by country
+
+
+-- temporal
+select max(Quantity)
+from (select Country, count(*) as Quantity from Customers group by country)Temporal
+
+-- temp
+select Country
+from (select Country, count(*) as Quantity from Customers group by country) Temporal
+where Quantity = (select max(Quantity)
+from (select Country, count(*) as Quantity from Customers group by country) Temp)
