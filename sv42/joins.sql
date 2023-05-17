@@ -83,3 +83,34 @@ select CompanyName, count(*)Quantity
 			from Orders O
 				join Customers C on O.CustomerID = C.CustomerID
 			group by CompanyName) Temporal)
+			
+			
+	SELECT ShipCountry, ShipCity, ShipPostalCode, COUNT(*) as Quantity
+	FROM Orders as O
+		JOIN Customers as C on O.CustomerID = C.CustomerID
+	WHERE (ShipCity <> City) or (ShipPostalCode <> PostalCode)
+	GROUP BY ShipCountry, ShipCity, ShipPostalCode
+
+
+	select CompanyName, ShipperID
+	from Orders as O
+		join Shippers as S on O.ShipVia = S.ShipperID
+	where (ShipCountry = 'Mexico') and (ShippedDate between '20180101' and '20180228')
+
+
+	select E.LastName, E.FirstName, E.ReportsTo, B.LastName, B.FirstName 
+	from Employees as E
+	left join Employees as B on E.ReportsTo = B.EmployeeID
+
+
+	select OrderID, SUM(Quantity*UnitPrice*(1-Discount)) as Total
+	from [Order Details]
+	group by OrderID
+
+
+	select Country, year(OrderDate) as Year ,SUM(Quantity*UnitPrice*(1-Discount)) as Total
+	from [Order Details] OD
+		join Orders O on OD.OrderID = O.OrderID
+		join Employees E on O.EmployeeID = E.EmployeeID
+	group by Country, year(OrderDate)
+	order by Total desc
