@@ -7,6 +7,7 @@ select CategoryID, CategoryName from Categories
 select ProductName, CategoryName from Products as P, Categories as C
 where P.CategoryID = C.CategoryID
 
+-- Muestre el nombre del producto y el nombre su categoría para cada producto.
 select ProductName, CategoryName
 from Products as P
 	join Categories as C on P.CategoryID = C.CategoryID
