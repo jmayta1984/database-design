@@ -122,5 +122,19 @@ where Year = @Year and Quantity = (select min(Quantity) from QuantityByCategoryN
 where Year = @Year)
 go;
 
+-- Crear un procedimiento o función que liste la relación de
+-- productos para una determinada categoría (nombre de la categoría).
+
 select * from dbo.FCategoryNameWithMinQuantity(2018)
 go;
+
+create procedure USPProductsByCategoryName
+@CategoryName nvarchar(15)
+as
+select ProductName
+from Products P
+	join Categories C on P.CategoryID = C.CategoryID
+where CategoryName = @CategoryName
+go;
+
+exec USPProductsByCategoryName 'Beverages'
