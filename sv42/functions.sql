@@ -87,3 +87,40 @@ where Quantity = (
 go;
 
 select * from dbo.f_country_min_orders_by_year(2016)
+
+
+-- Crear una función que retorne el nombre de
+-- las compañías (cliente) que provienen de un determinado
+-- país
+
+create function FCustomerNameByCountry(@Country nvarchar(15)) returns table
+return
+select CompanyName
+from Customers
+where Country = @Country
+go;
+
+select * from dbo.FCustomerNameByCountry('Brazil')
+go;
+-- Crear una función que retorne el nombre de la categoría con la
+-- mayor cantidad de unidades de productos vendidos para un determinado año.
+
+create view QuantityByCategoryNameByYear
+as
+select CategoryName, year(OrderDate) as Year, sum(Quantity) as Quantity
+from [Order Details] as OD
+	join Products P on OD.ProductID = P.ProductID
+	join Categories C on P.CategoryID = C.CategoryID
+	join Orders O on OD.OrderID = O.OrderID
+group by CategoryName, year(OrderDate)
+go;
+
+create function FCategoryNameWithMinQuantity(@Year int) returns table
+return
+select CategoryName, Quantity from QuantityByCategoryNameByYear
+where Year = @Year and Quantity = (select min(Quantity) from QuantityByCategoryNameByYear
+where Year = @Year)
+go;
+
+select * from dbo.FCategoryNameWithMinQuantity(2018)
+go;
