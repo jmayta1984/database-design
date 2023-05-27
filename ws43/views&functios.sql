@@ -94,4 +94,57 @@ select dbo.FTotalOrdersByYear(2016)
 go;
 
 -- Crear una función que retorne los nombres de los clientes que realizaron al menos un pedido
--- para un determinado año
+-- para un determinado año.
+
+-- CompanyName, CustomerID -> Customers as C
+-- OrderID, OrderDate, CustomerID -> Orders as O
+
+create function CustomerWithOrders(@Year int) returns table
+return
+	select CompanyName, Year(OrderDate) as Year, count(OrderID) as TotalOrders
+	from Customers as C
+		join Orders as O on C.CustomerID = O.CustomerID
+	where Year(OrderDate) = @Year
+	group by CompanyName, Year(OrderDate);
+go;
+
+select * from dbo.CustomerWithOrders(2016)
+go;
+
+-- Crear una función que retorne el nombre del shipper (empresa que hace el envío)
+-- con la mayor cantidad de pedidos asignados para un determinado año.
+
+-- CompanyName, ShipperID -> Shippers as S
+-- OrderID, OrderDate, ShipVia -> Orders as O
+
+create view TotalOrdersByYearByShipper
+as
+select CompanyName, Year(OrderDate) as Year, count(OrderID) as TotalOrders
+from Shippers as S
+	join Orders as O on S.ShipperID = O.ShipVia
+group by CompanyName, Year(OrderDate)
+go;
+
+
+select * from TotalOrdersByYearByShipper
+go;
+
+-- 2016
+
+select max(TotalOrders)
+from TotalOrdersByYearByShipper
+where Year = 2016;
+--58
+go;
+
+
+create function ShipperWithMaxOrders(@Year int) returns table
+return
+select CompanyName
+from TotalOrdersByYearByShipper
+where Year = @Year and TotalOrders = (select max(TotalOrders)
+					from TotalOrdersByYearByShipper
+					where Year = @Year)
+go;
+
+select * from dbo.ShipperWithMaxOrders(2016)
