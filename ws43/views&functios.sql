@@ -148,3 +148,46 @@ where Year = @Year and TotalOrders = (select max(TotalOrders)
 go;
 
 select * from dbo.ShipperWithMaxOrders(2016)
+
+-- Crear un procedimiento o función que liste los nombres de los productos
+-- para una determinada categoría (nombre la categoría)
+
+-- ProductName, CategoryID -> Products as P
+-- CategoryName, CategoryID -> Categories as C
+
+create procedure USPProductsByCategoryName
+@CategoryName nvarchar(15)
+as
+begin
+	select ProductName
+	from Products as P
+		join Categories as C on P.CategoryID = C.CategoryID
+	where CategoryName = @CategoryName
+end
+go;
+
+exec USPProductsByCategoryName 'Beverages'
+
+
+-- Crear un procedimiento almacenado que permita actualizar el stock de
+-- unidades de un producto, teniendo como dato el código del producto y
+-- la cantidad de unidades vendidas.
+
+-- Producto: Chai  Código:1  Vender: 9
+
+select ProductID, ProductName, UnitsInStock
+from Products
+go;
+
+create procedure USPUpdateProductsStock
+@ProductID int,
+@Quantity int
+as
+begin
+
+	update Products
+	set UnitsInStock = UnitsInStock - @Quantity
+	where ProductID = @ProductID and UnitsInStock >= @Quantity
+end;
+
+exec USPUpdateProductsStock 1, 31
