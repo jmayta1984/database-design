@@ -94,3 +94,71 @@ begin
 end;
 
 exec USPUpdateProducts 1,9
+
+-- Crear un procedimiento almacenado que permita ingresar una categoría
+
+create procedure USPInsertCategory
+@CategoryName nvarchar(15)
+as
+begin
+
+	declare @Quantity int
+	set @Quantity = (select count(CategoryName) from Categories
+	where CategoryName = @CategoryName)
+
+	if @Quantity = 0
+	begin
+		insert into Categories ( CategoryName)
+		values ( @CategoryName)
+		print(N'Se ingresó la categoría')
+	end
+	else
+		print(N'La categoría ya existe')
+end;
+go;
+
+exec USPInsertCategory @CategoryName = 'Test'
+go;
+
+select * from Categories
+go;
+
+-- Crear un procedimiento almacenado que permita eliminar una categoría
+
+create procedure USPDeleteCategory
+	@CategoryID int
+as
+begin
+	declare @Quantity int
+
+	set @Quantity = (select count(*) from Products
+	where CategoryID = @CategoryID)
+
+	if @Quantity = 0
+		delete from Categories
+		where CategoryID = @CategoryID
+	else 
+		print(N'No se puede borrar la categoría, porque está siendo utilizada')
+end;
+go;
+
+exec USPDeleteCategory @CategoryID = 2
+go;
+
+
+-- Crear un procedimiento almacenado que retorne la cantidad de clientes
+
+create procedure USPCustomersQuantity
+	 @Quantity int output
+as
+begin
+	set @Quantity = (select count(*) from Customers)
+end;
+go;
+
+declare @Q int
+exec USPCustomersQuantity @Quantity = @Q OUTPUT
+declare @message varchar(50)
+set @message ='El total de cliente es: ' 
+print (concat(@message,@Q))
+go;
