@@ -123,6 +123,10 @@ go;
 select * from Categories
 go;
 
+
+
+
+
 -- Crear un procedimiento almacenado que permita eliminar una categoría
 
 create procedure USPDeleteCategory
@@ -161,4 +165,50 @@ exec USPCustomersQuantity @Quantity = @Q OUTPUT
 declare @message varchar(50)
 set @message ='El total de cliente es: ' 
 print (concat(@message,@Q))
+go;
+
+create procedure USPPrintProductsStock
+
+as
+begin
+	declare @ProductName nvarchar(40)
+	declare @UnitsInStock smallint
+
+	declare ProductsCursor cursor for
+	select ProductName, UnitsInStock from Products
+
+	open ProductsCursor
+	fetch ProductsCursor into @ProductName, @UnitsInStock
+
+	while (@@fetch_status = 0)
+	begin
+		print(concat(@ProductName, ': ', @UnitsInStock))
+		fetch ProductsCursor into @ProductName, @UnitsInStock
+	end
+	close ProductsCursor
+	deallocate ProductsCursor
+end
+go;
+
+exec USPPrintProductsStock
+go;
+
+create trigger TRCategories on Categories
+for delete
+as
+	print(N'Se ejecutó el trigger para la operación delete')
+go;
+
+exec USPDeleteCategory @CategoryID = 15
+go;
+
+create trigger TRUpdateCategories on Categories
+for update
+as
+	print(N'Se ejecutó el trigger para la operación update')
+go;
+
+update Categories
+set Description = 'Demo'
+where CategoryID = 21
 go;
