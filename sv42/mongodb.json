@@ -1,0 +1,46 @@
+use northwind
+
+db.categories.insertOne({name: "Condiments"})
+
+db.categories.find()
+
+use sample_mflix
+
+db.movies.find({year:2000}).count()
+
+use upc
+
+db.students.insertOne({last_name: "Castillo", first_mame: "Carlos", courses: ["IHC", "Redes", "Diseño de base de datos"]})
+db.students.insertOne({last_name: "Campos", first_name: "Juana",
+    courses: [{code: "SI393", name: "IHC" }, {code: "SI400", name: "Diseño de base de datos"} ]})
+
+
+db.students.find()
+
+
+
+use airbnb
+
+// Crear un regla de validacion para un alojamiento
+// nombre                       --> obligatorio
+// usuario (nombre, apellido)   --> obligatorio
+// direcccion (ciudad, pais)    --> obligatorio
+// valoracion
+// servicios
+
+db.createCollection("alojamientos", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            title: "Esquema de valiación para los documentos de la colección alojamientos",
+            required: ["nombre", "direccion", "usuario"],
+            properties: {
+                nombre: {
+                    bsonType: "string"
+                }
+            }
+        }
+    }
+})
+
+db.alojamientos.insertOne({nombre: 15, direccion: "Brazil", usuario: "Alejandro Dumas"})
