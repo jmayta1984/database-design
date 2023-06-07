@@ -44,3 +44,61 @@ db.createCollection("alojamientos", {
 })
 
 db.alojamientos.insertOne({nombre: 15, direccion: "Brazil", usuario: "Alejandro Dumas"})
+
+
+use airbnb
+
+-- Campos
+-- titulo: "string"
+-- ubicacion: documento ("object")
+				-- ciudad
+				-- departamento
+				-- pais
+-- anfitrion: "string"
+-- precio: "double"
+-- servicios: "array"
+				"strings"
+-- comentarios: "array"
+					documento ("object")
+					-- usuario: "string"
+					-- valoracion: "int"
+					-- comentario: "string"
+
+
+db.createCollection("alojamientos", {
+	validator: {
+		$jsonSchema: {
+			bsonType: "object",
+			description: "Documento que representa un alojamiento",
+			required: ["titulo", "anfitrion", "ubicacion", "servicios"],
+			properties: {
+				titulo: {
+					bsonType: "string",
+					description: "El título es obligatorio y es de tipo string"
+				},
+				anfitrion: {
+					bsonType: "string",
+				},
+				ubicacion: {
+					bsonType: "object",
+					required: ["ciudad", "departamento", "pais"],
+					properties: {
+						ciudad: {
+							bsonType: "string"
+						}
+					}
+				},
+				servicios: {
+					bsonType: "array",
+					minItems: 1,
+					uniqueItems: true,
+					items: {
+						bsonType: "string"
+					}
+				}
+			}
+
+		}
+	}
+
+})
