@@ -19,3 +19,21 @@ db.students.updateOne({first_name: "Luis", last_name: "Fuentes"}, {$set:
   })
 
 db.students.find().count()
+
+db.students.find({age: { $gt: 17} })
+
+
+
+db.createCollection("alojamientos", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["nombre", "calificacion"],
+            properties: {
+                nombre: {
+                    bsonType: "string"
+                }
+            }
+        }
+    }
+})
