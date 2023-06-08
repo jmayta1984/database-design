@@ -1,0 +1,30 @@
+db.createCollection("alojamientos", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["anfitrion", "ubicacion", "tipo_alojamiento",
+             "titulo", "servicios"],
+            properties: {
+                anfitrion: {
+                    bsonType: "object",
+                    required: ["name"],
+                    properties: {
+                        name: {
+                            bsonType: "string",
+                        }
+                    }
+                },
+                titulo: {
+                    bsonType: "string",
+                },
+                servicios: {
+                    bsonType: "array",
+                    minItems: 1,
+                    items: {
+                        bsonType: "string",
+                    }
+                }
+            }
+        }
+    }
+})
