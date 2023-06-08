@@ -1,3 +1,43 @@
+use upc-cc47
+
+db.students.find()
+
+db.students.insertOne({first_name: "Ana", last_name:"Paredes", courses:[
+    "IHC"
+]})
+
+db.students.find({courses: "IHC"})
+
+
+// Crear un esquema de validación para un documento que permita registrar los
+// datos de un alojamiento
+
+// titulo   --> obligatorio
+// direccion (ciudad, pais) --> obligatorio
+// usuario  (nombre) --> obligatorio
+// servicios
+
+use airbnb
+
+use airbnb
+
+// anfitrion: "object"   --> obligatorio
+        // nombre: "string"
+        // fecha de registro: "string"
+// ubicacion: "object" --> obligatorio
+        // ciudad: "string"
+        // pais: "string"
+// tipo_alojamiento: "object"  --> obligatiorio
+        // habitaciones: "int"
+// titulo: "string"   --> obligatorio
+// comentarios: "array"
+        // "object"
+            // usuario: "string"
+            // calificacion: "int"
+// servicios: "array"  --> servicios
+        // "string"
+
+
 db.createCollection("alojamientos", {
     validator: {
         $jsonSchema: {
@@ -27,4 +67,25 @@ db.createCollection("alojamientos", {
             }
         }
     }
+})
+
+
+db.alojamientos.insertOne({
+    anfitrion: {name: "Ximena"},
+    ubicacion: "Cusco",
+    tipo_alojamiento: "casa",
+    titulo: "Casa de campo en el Valle Sagrado",
+    servicios: ["Cocina", "Baño"]
+})
+
+
+db.alojamientos.find()
+
+
+db.alojamientos.insertOne({
+    anfitrion: {name: "Marcos"},
+    ubicacion: "Cusco",
+    tipo_alojamiento: "casa",
+    titulo: "Casa en la plaza",
+    servicios: ["Cocina"]
 })
