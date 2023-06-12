@@ -145,5 +145,124 @@ insert into ratings(reviewer_id, movie_id, stars, comment) values (5,6,3, 'Buena
 insert into ratings(reviewer_id, movie_id, stars, comment) values (5,5,4, 'Excelentes actuaciones')
 insert into ratings(reviewer_id, movie_id, stars, comment) values (6,6,4, 'Excelentes actuaciones')
 insert into ratings(reviewer_id, movie_id, stars, comment) values (6,7,4, 'Excelentes actuaciones')
-
+go
 -- End of file.
+
+-- Crear un procedimiento almacenado o funcion que indique los actores que no han participado
+-- en un determinado género de película.
+
+-- name, id -> actors
+--actor_id, movied_id -> movie_cast
+--id, genre_id -> movies
+-- description, id -> genres
+
+create function f_actors(
+	@Description varchar(50)
+) returns table
+return 
+select name from
+actors
+where name not in (
+select name
+from 
+actors as a
+	join movie_cast as mc on a.id = mc.actor_id
+	join movies as m on  mc.movie_id = m.id
+	join genres as g on m.genre_id = g.id
+where description = @Description)
+go;
+
+select * from dbo.f_actors('drama')
+go;
+
+--Crear un procedimiento almacenado o función que retorne la cantidad de actores que participaron en
+--películas de un determinado género (ingresado como parámetro) para un determinado año (ingresado como
+--parámetro).
+
+create view v_actors_quantity_by_year_by_genre
+as
+select year,description,count(actor_id) as quantity
+from movie_cast as mc
+	join movies as m on mc.movie_id = m.id
+	join genres as g on m.genre_id = g.id
+group by year,description
+go;
+
+create function f_actors_quantity_by_year_by_genre(
+	@year int,
+	@description varchar(50)
+)
+returns int
+as
+begin
+	declare @quantity int
+	select @quantity = quantity
+	from v_actors_quantity_by_year_by_genre
+	where year= @year and description = @description
+	return @quantity
+end;
+go;
+
+
+-- Crear un procedimiento almacenado o función que retorne el nombre del actor (o actores) que participó más
+-- veces en películas de un determinado género (ingresado como parámetro) para un determinado año
+-- (ingresado como parámetro).
+
+create view v_movies_quantity_by_year_actor_by_genre
+as
+select name, description, year , count(*) as quantity
+from actors as a
+	join movie_cast as mc on a.id = mc.actor_id
+	join movies as m on mc.movie_id = m.id
+	join genres as g on m.genre_id = g.id
+group by name, description, year
+go;
+
+create function f_max_actor_movies(
+	@year int,
+	@description varchar(50)
+) returns table
+return 
+
+select name
+from v_movies_quantity_by_year_actor_by_genre
+where year = @year and description = @description and quantity = (select max (quantity) max
+from v_movies_quantity_by_year_actor_by_genre
+where year = @year and description = @description)
+go;
+-- Crear un procedimiento almacenado que permita imprimir la cantidad de películas por
+-- género para un determinado año.
+create procedure usp_print_movies
+	@year int
+
+as
+begin
+	declare @yearCursor int
+	declare @description varchar(50)
+	declare @quantity int
+
+	-- Declarar el cursor
+	declare cursor_movies cursor for
+		select year as year_movie, description, count(*)
+		from movies as m
+			join genres as g on m.genre_id = g.id
+		where year = @year
+		group by year, description
+	-- Abrir el cursor
+	open cursor_movies
+
+	-- Ir al primer resultado
+	fetch cursor_movies into @yearcursor, @description, @quantity
+
+	-- Verificar si la operación de obtener datos has sido exitosa
+	while (@@FETCH_STATUS = 0) 
+	begin
+		print(concat(@yearcursor, ':', @description, @quantity))
+		fetch cursor_movies into @yearcursor, @description, @quantity
+	end
+	close cursor_movies
+	deallocate cursor_movies
+end
+go
+
+exec usp_print_movies 2000
