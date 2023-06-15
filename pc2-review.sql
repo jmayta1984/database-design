@@ -1,8 +1,8 @@
-CREATE DATABASE MovieDB-SI35;
+CREATE DATABASE MovieDBSI35;
 
 GO
 
-USE MovieDB;
+USE MovieDBSI35;
 
 -- tables
 -- Table: actors
