@@ -4,7 +4,7 @@
 
 - [Grabación](https://us-lti.bbcollab.com/collab/ui/session/playback/load/56fb5347a788452693f348428840f8b7)
 
-- [Base de datos a restaurar](https://github.com/jmayta1984/database-design/blob/main/sql-review/movies_restore.sql)
+- <a href="https://github.com/jmayta1984/database-design/blob/main/sql-review/movies_restore.sql" targe="_blank">Base de datos a restaurar</a>
 
 - [Ejercicios sobre la base de datos](https://github.com/jmayta1984/database-design/blob/main/sql-review/movies-queries.sql)
 
